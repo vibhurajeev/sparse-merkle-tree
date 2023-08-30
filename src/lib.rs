@@ -61,6 +61,7 @@
 
 #![cfg_attr(not(feature = "std"), no_std)]
 
+#[cfg(not(feature = "arch-32"))]
 pub mod blake2b;
 #[cfg(feature = "smtc")]
 pub mod ckb_smt;

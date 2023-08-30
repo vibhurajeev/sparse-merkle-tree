@@ -9,8 +9,10 @@ use crate::{
 };
 use core::cmp::Ordering;
 use core::marker::PhantomData;
+use serde::{Serialize, de::DeserializeOwned, Deserialize};
+
 /// The branch key
-#[derive(Debug, Clone, Eq, PartialEq, Hash)]
+#[derive(Debug, Clone, Eq, PartialEq, Hash, Deserialize, Serialize)]
 pub struct BranchKey {
     pub height: u8,
     pub node_key: H256,
@@ -37,7 +39,7 @@ impl Ord for BranchKey {
 }
 
 /// A branch in the SMT
-#[derive(Debug, Eq, PartialEq, Clone)]
+#[derive(Debug, Eq, PartialEq, Clone, Deserialize, Serialize)]
 pub struct BranchNode {
     pub left: MergeValue,
     pub right: MergeValue,
@@ -102,7 +104,7 @@ impl<H, V, S> SparseMerkleTree<H, V, S> {
     }
 }
 
-impl<H: Hasher + Default, V, S: StoreReadOps<V>> SparseMerkleTree<H, V, S> {
+impl<H: Hasher + Default, V: DeserializeOwned, S: StoreReadOps<V>> SparseMerkleTree<H, V, S> {
     /// Build a merkle tree from store, the root will be calculated automatically
     pub fn new_with_store(store: S) -> Result<SparseMerkleTree<H, V, S>> {
         let root_branch_key = BranchKey::new(core::u8::MAX, H256::zero());
@@ -119,7 +121,7 @@ impl<H: Hasher + Default, V, S: StoreReadOps<V>> SparseMerkleTree<H, V, S> {
     }
 }
 
-impl<H: Hasher + Default, V: Value, S: StoreReadOps<V> + StoreWriteOps<V>>
+impl<H: Hasher + Default, V: Value + DeserializeOwned + Serialize, S: StoreReadOps<V> + StoreWriteOps<V>>
     SparseMerkleTree<H, V, S>
 {
     /// Update a leaf, return new merkle root
@@ -257,7 +259,7 @@ impl<H: Hasher + Default, V: Value, S: StoreReadOps<V> + StoreWriteOps<V>>
     }
 }
 
-impl<H: Hasher + Default, V: Value, S: StoreReadOps<V>> SparseMerkleTree<H, V, S> {
+impl<H: Hasher + Default, V: Value + DeserializeOwned + Serialize, S: StoreReadOps<V>> SparseMerkleTree<H, V, S> {
     /// Get value of a leaf
     /// return zero value if leaf not exists
     pub fn get(&self, key: &H256) -> Result<V> {
