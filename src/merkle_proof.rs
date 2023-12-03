@@ -6,8 +6,9 @@ use crate::{
     H256, MAX_STACK_SIZE,
 };
 use serde::{Deserialize, Serialize};
+use parity_scale_codec::{Encode, Decode};
 
-#[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize, Encode, Decode)]
 pub struct MerkleProof {
     // leaf bitmap, bitmap.get_bit(height) is true means there need a non zero sibling in this height
     leaves_bitmap: Vec<H256>,
