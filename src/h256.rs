@@ -1,9 +1,11 @@
 use core::cmp::Ordering;
+use parity_scale_codec::{Decode, Encode};
 use serde::{Deserialize, Serialize};
-use parity_scale_codec::{Encode, Decode};
 
 /// Represent 256 bits
-#[derive(Eq, PartialEq, Debug, Default, Hash, Clone, Copy, Deserialize, Serialize, Encode, Decode)]
+#[derive(
+    Eq, PartialEq, Debug, Default, Hash, Clone, Copy, Deserialize, Serialize, Encode, Decode,
+)]
 pub struct H256([u8; 32]);
 
 const ZERO: H256 = H256([0u8; 32]);
@@ -47,6 +49,10 @@ impl H256 {
 
     pub fn as_slice(&self) -> &[u8] {
         &self.0[..]
+    }
+
+    pub fn as_fixed_slice(&self) -> &[u8; 32] {
+        &self.0
     }
 
     /// Treat H256 as a path in a tree
