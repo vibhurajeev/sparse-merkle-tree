@@ -5,9 +5,7 @@ use serde::{Deserialize, Serialize};
 use std::fmt;
 
 /// Represent 256 bits
-#[derive(
-    Eq, PartialEq, Debug, Default, Hash, Clone, Copy, Deserialize, Serialize, Encode, Decode,
-)]
+#[derive(Eq, PartialEq, Default, Hash, Clone, Copy, Deserialize, Serialize, Encode, Decode)]
 pub struct H256([u8; 32]);
 
 const ZERO: H256 = H256([0u8; 32]);
@@ -136,5 +134,11 @@ impl From<H256> for [u8; 32] {
 impl fmt::Display for H256 {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, "{}", hex::encode(&self.0))
+    }
+}
+
+impl fmt::Debug for H256 {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "H256({})", hex::encode(&self.0))
     }
 }
