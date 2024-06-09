@@ -31,6 +31,7 @@ cfg-if = "1"
 blake2b-rs = { version = "0.2", optional = true }
 serde = "1.0"
 parity-scale-codec = { version = "3.6.5", features = ["derive"]}
+hex = "0.4.3"
 
 [dev-dependencies]
 proptest = "0.9"

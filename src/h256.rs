@@ -1,6 +1,8 @@
-use core::cmp::Ordering;
+use core::{cmp::Ordering, convert::TryFrom};
+use hex::{self, ToHex};
 use parity_scale_codec::{Decode, Encode};
 use serde::{Deserialize, Serialize};
+use std::fmt;
 
 /// Represent 256 bits
 #[derive(
@@ -113,8 +115,26 @@ impl From<[u8; 32]> for H256 {
     }
 }
 
+impl TryFrom<&str> for H256 {
+    type Error = hex::FromHexError;
+
+    fn try_from(value: &str) -> Result<Self, Self::Error> {
+        let bytes = hex::decode(value)?;
+        let mut array = [0u8; 32];
+        array.copy_from_slice(&bytes);
+
+        Ok(Self(array))
+    }
+}
+
 impl From<H256> for [u8; 32] {
     fn from(h256: H256) -> [u8; 32] {
         h256.0
+    }
+}
+
+impl fmt::Display for H256 {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "{}", hex::encode(&self.0))
     }
 }
